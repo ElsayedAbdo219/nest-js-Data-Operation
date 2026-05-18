@@ -1,27 +1,31 @@
 import { Injectable } from "@nestjs/common";
-import { addItem } from './dto/addItem.dto';
+import { addUser } from './dto/addUser.dto';
 import { updateItem } from './dto/updateItem.dto';
-
+import { InjectRepository } from "@nestjs/typeorm";
+import { Repository } from "typeorm";
+import { User } from "./entities/user.entity";
 @Injectable()
 export class UserService {
-
-    getAll() {
-        return "this is list of items ..... see more";
+      constructor(@InjectRepository(User) private readonly user:Repository<User>){}
+    async getAll() {
+        return  await this.user.find();
     }
 
     findOne(id: any) {
-        return "item id is " + id;
+        return this.user.findOne({where : {id}});
     }
 
-    addItem(data: addItem) {
-        return "added successfully!";
+    async addUser(data: addUser) {
+        const newUser = await  this.user.create(data);
+         return  this.user.save({...newUser});
     }
 
-    updateItem(id: any, data: updateItem) {
-        return "update successfully!";
+    async updateUser(id: any, data: addUser) {
+      const user = await this.findOne(id);
+        return await this.user.save({ ...user, ...data });
     }
 
-    deleteItem(id: any) {
-        return "item will be deleted is " + id;
+    async deleteUser(id: any) {
+      return await this.user.delete(id);
     }
 }

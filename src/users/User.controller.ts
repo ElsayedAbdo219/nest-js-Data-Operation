@@ -1,16 +1,17 @@
 import { Controller, Get, Post, Put, Delete, Param, Body, UseGuards } from "@nestjs/common";
 import { UserService } from './User.service';
-import { addItem } from './dto/addItem.dto';
+import { addUser } from './dto/addUser.dto';
 import { updateItem } from './dto/updateItem.dto';
-import {RolesGuard}  from '../users/guards/roles.guard'
+// import {RolesGuard}  from '../users/guards/roles.guard'
 import { Roles } from './decorators/roles.decorator';
-@Controller('items')
-@UseGuards(RolesGuard)
+@Controller('users')
+// @UseGuards(RolesGuard)
 export class UserController {
 
   constructor(private userService: UserService) {}
 
   @Get('/')
+  
   getAll() {
     return this.userService.getAll();
   }
@@ -21,18 +22,18 @@ export class UserController {
   }
    
   @Post('/')
-  @Roles('user')
-  addItem(@Body() addItem: addItem) {
-    return this.userService.addItem(addItem);
+  // @Roles('user')
+  addUser(@Body() addUser: addUser) {
+    return this.userService.addUser(addUser);
   }
 
   @Put('/:id')
-  updateItem(@Param('id') id: any, @Body() updateItem: updateItem) {
-    return this.userService.updateItem(id, updateItem);
+  updateUser(@Param('id') id: any, @Body() addUser: addUser) {
+    return this.userService.updateUser(id, addUser);
   }
 
   @Delete('/:id')
-  deleteItem(@Param('id') id: any) {
-    return this.userService.deleteItem(id);
+  deleteUser(@Param('id') id: any) {
+    return this.userService.deleteUser(id);
   }
 }
